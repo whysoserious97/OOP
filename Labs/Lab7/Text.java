@@ -7,64 +7,24 @@ import java.util.List;
 
 public class Text{
 
-    String s;   // original string
-    int nrOfSentences;      // nr of sentences that are in original string
-    public Sentence[] textArray;       //sentences in text
-    private List<Word> words = new ArrayList<>(); // All words in the text
-    int nrOfWords = 0;                             // nr of words
-    int nrOfLetters = 0;                // nr of letters
-    String[] top5;                // top 5 words
-    int nrOfVowels = 0;
-    int nrOfconsonants = 0;
-    public Word[] splitedScentence;
-    HashMap<String, Integer> hashMap = new HashMap<>();   // used to count words
-    String longest; // the longest string in text
-    int maxString=0; // length of the longest string
-
+    String str;   // original string
 
   public  Text( String s ) {
-        this.s = s;       // the full text is here
-        textArray = split(); // original text to array of sentences
-        nrOfSentences = textArray.length;
-
-        for ( int i = 0 ; i < textArray.length ; i++ ){  // is working with every sentence
-            splitedScentence = textArray[ i ].split();   // sets the current sentence as words
-            for ( int j = 0 ; j < splitedScentence.length ; j++ ){   // each sentence has words
-                words.add( splitedScentence[ j ] );      // using an array to store words
-                nrOfconsonants += splitedScentence[ j ].consonants;
-                nrOfVowels += splitedScentence[ j ].vowels;
-                nrOfLetters += splitedScentence[ j ].letters;
-            }
-            nrOfWords += splitedScentence.length;
-        }
-        // after all this we want to count all distinct words in the  array and select the longest word
-        for ( int i = 0 ; i < words.size() ; i++ ){
-
-            if (maxString<words.get( i ).word.length())
-            {
-                longest=words.get( i ).word;    // sets the content of the string
-                maxString=words.get( i ).word.length(); // sets the current max string
-            }
-
-            if (hashMap.containsKey( words.get( i ).word.toLowerCase() )) {  // we check in lower case  ,   because "This" and "this" are the same word
-                hashMap.put( words.get( i ).word.toLowerCase(), hashMap.get( words.get( i ).word.toLowerCase() ) + 1 );    // if the hashmap contains the string it will override that string with itself but with a value greater with 1
-            } else {
-                hashMap.put( words.get( i ).word.toLowerCase(), 1 );   // sets the first value
-            }
-        }
+        str = s;       // the full text is here
     }
 
     private Sentence[] split() {
-        String[] array = this.s.split( "\\.+\\s+|!\\s+|\\?\\s+|;\\s+" ); // splits are characters that usually ends a sentence((.),(!),(?),(;)) and is followed by a space
+        String[] array = this.str.split( "\\.+\\s+|!\\s+|\\?\\s+|;\\s+" ); // splits are characters that usually ends a sentence((.),(!),(?),(;)) and is followed by a space
         Sentence[] senarray = new Sentence[ array.length ];
         for ( int i = 0 ; i < array.length ; i++ ){
             senarray[ i ] = new Sentence( array[ i ] ); // a new element is created with the string from array
         }
         return senarray;
     }
-      public  String[] getTop5()
-        {
+    public  String[] getTop5() {
             String[] top= new String[5];
+            HashMap<String, Integer> hashMap ;   // used to count words
+            hashMap=getHashMap();
             // now we want to create an array that stores the String and another that stores the nr of words.
             String[] strArr= new String[hashMap.size()];
             int[] intaArr= new int[hashMap.size()];
@@ -107,5 +67,84 @@ public class Text{
                 }
             }
         }
+    public int getNrOfSentences(){
+        return split().length;
+    }
+    public int getNrOfWords() {
+        int nrOfWords=0;
+       Sentence[] textArray= split();       //sentences in text
+       for ( int i = 0 ; i < textArray.length ; i++ ){  // is working with every sentence
+           nrOfWords += textArray[ i ].split().length;   // sets the current sentence as words
 
+       }
+        return nrOfWords;
+    }
+    public int getNrOfVowels(){
+      int nrOfVowels=0;
+        Sentence[] textArray= split();       //sentences in text
+        Word[] splitedScentence;
+        for ( int i = 0 ; i < textArray.length ; i++ ){  // is working with every sentence
+            splitedScentence = textArray[ i ].split();   // sets the current sentence as words
+            for ( int j = 0 ; j < splitedScentence.length ; j++ ){   // each sentence has words
+                nrOfVowels += splitedScentence[ j ].getVowels();
+            }
+
+        }
+      return nrOfVowels;
+    }
+    public int getNrOfConsonants(){
+        int nrOfConsonants=0;
+        Sentence[] textArray= split();       //sentences in text
+         Word[] splitedScentence;
+        for ( int i = 0 ; i < textArray.length ; i++ ){  // is working with every sentence
+            splitedScentence = textArray[ i ].split();   // sets the current sentence as words
+            for ( int j = 0 ; j < splitedScentence.length ; j++ ){   // each sentence has words
+                   nrOfConsonants += splitedScentence[ j ].getConsonants();
+            }
+        }
+        return nrOfConsonants;
+    }
+    public int getNrOfLetters(){
+      return getNrOfConsonants()+getNrOfVowels();
+    }
+    public String getLongest(){
+      int maxString=0;
+      String longest="";
+        List<Word> words;
+        words=getWordsarray();
+        for ( int i = 0 ; i < words.size() ; i++ ){
+            if (maxString<words.get( i ).word.length())
+            {
+                longest=words.get( i ).word;    // sets the content of the string
+                maxString=words.get( i ).word.length(); // sets the current max string
+            }
+        }
+      return longest;
+    }
+    public HashMap<String, Integer> getHashMap(){
+        List<Word> words;
+        words=getWordsarray();
+        HashMap<String, Integer> hashMap=new HashMap<>();
+        for ( int i = 0 ; i < words.size() ; i++ ){
+            if (hashMap.containsKey( words.get( i ).word.toLowerCase() )) {  // we check in lower case  ,   because "This" and "this" are the same word
+                hashMap.put( words.get( i ).word.toLowerCase(), hashMap.get( words.get( i ).word.toLowerCase() ) + 1 );    // if the hashmap contains the string it will override that string with itself but with a value greater with 1
+            } else {
+                hashMap.put( words.get( i ).word.toLowerCase(), 1 );   // sets the first value
+            }
+        }
+        return hashMap;
+    }
+    public List<Word> getWordsarray(){
+      List<Word> words = new ArrayList<>(); // All words in the text
+         Word[] splitedScentence;
+        Sentence[] textArray= split();       //sentences in text
+        for ( int i = 0 ; i < textArray.length ; i++ ){  // is working with every sentence
+            splitedScentence = textArray[ i ].split();   // sets the current sentence as words
+            for ( int j = 0 ; j < splitedScentence.length ; j++ ){   // each sentence has words
+                words.add( splitedScentence[ j ] );      // using an array to store words
+            }
+        }
+        return words;
+    }
 }
+

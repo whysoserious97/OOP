@@ -12,13 +12,14 @@ public class Main7 {
 
         Text text = new Text (str);
 
-        System.out.println("The number of sentences = "+text.nrOfSentences);
-        System.out.println("The number of consonants = "+text.nrOfconsonants);
-        System.out.println("The number of letters = "+text.nrOfLetters);
-        System.out.println("The number of vowels = "+text.nrOfVowels);
-        System.out.println("The number of words = "+text.nrOfWords);
+        System.out.println("The number of sentences = "+text.getNrOfSentences());
+        System.out.println("The number of consonants = "+text.getNrOfConsonants());
+        System.out.println("The number of letters = "+text.getNrOfLetters());
+        System.out.println("The number of vowels = "+text.getNrOfVowels());
+        System.out.println("The number of words = "+text.getNrOfWords());
         System.out.println("Top 5 words by their frequency = "+ Arrays.toString( text.getTop5() ) );
-        System.out.println("the longest word in text: "+text.longest+"("+text.longest.length()+" chars)");
+        System.out.println("the longest word in text: "+text.getLongest());
+
 
     }
 
