@@ -13,7 +13,7 @@ public class AlertBox{
         Stage window = new Stage(  );
         window.initModality( Modality.APPLICATION_MODAL );
         window.setTitle( title );
-        window.setMinWidth( 250 );
+        window.setMinWidth( 350 );
 
         Label label = new Label( message );
         Button closeButton = new Button( "Ok, got it!" );

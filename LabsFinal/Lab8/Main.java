@@ -1,6 +1,8 @@
 package LabsFinal.Lab8;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,12 +22,24 @@ public class Main extends Application {
         primaryStage.setTitle( "Title of the Window" );
         TextField textField1= new TextField( "Label 1" );
         TextField textField2 = new TextField( "Label 2" );
+        textField2.focusedProperty().addListener( new ChangeListener<Boolean>(){
+            @Override
+            public void changed( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
+                if(!newValue){
+                    if(textField2.getText().equals( "13" ))
+                        try {
+                            throw new UnluckyException();
+                        } catch (UnluckyException e) {
+                            AlertBox.display("Unlucky Exception","Unlucky number!");
+                        }
+                }
+            }
+        } );
         Label result = new Label( "Result" );
 
         Button button = new Button( "Divide");
 
         button.setOnAction( event -> {
-          //  System.out.println(Integer.parseInt( "s" ));
             divideLabels( textField1,textField2, result);
         } );
 
@@ -46,19 +60,14 @@ public class Main extends Application {
             Integer nr2 = Integer.parseInt( divisor.getText() );
             Integer r = nr1/nr2;
             result.setText( r.toString() );
-            if (nr2==13){
-                throw new  UnluckyException();
-            }
+
         }catch (ArithmeticException ae)
         {
             AlertBox.display("Division to 0","You cannot devide by 0");
         }catch (NumberFormatException ne){
-            AlertBox.display( "Exception catched","Your input is invalid to be parsed!!!" );
-        }catch(UnluckyException ue)
-        {
-            AlertBox.display("Unlucky Exception","You are so unlucky right now!");
+            AlertBox.display( "Exception catched","Your input is invalid !!!" );
         }catch (Exception e){
-            AlertBox.display("HOW DARE YOU TO FIND AN ERROR IN MY CODE??","This guy found an unexpected exception :)");
+            AlertBox.display("Hmmmmm....","Something that I didn't expect :)");
         }
     }
 
